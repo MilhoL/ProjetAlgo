@@ -1,15 +1,29 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <conio.h>
 #include <windows.h>
 
 
 // Dimensions du plateau
 #define LIGNES 6
 #define COLONNES 8
+
 // Taille de chaque case
-#define LARGEUR 14
-#define HAUTEUR 7
+#define LARGEUR 8
+#define HAUTEUR 4
+
+// Constantes de saisie d'infos
+#define CHARMAX 20
+#define NB_COULEURS 3
+#define NB_JOUEURS 2
+
+struct joueur {
+    char pseudo[CHARMAX];
+    char heros[CHARMAX];
+    int couleurs[NB_COULEURS];
+};
+typedef struct joueur S_joueur;
 
 
 
@@ -23,22 +37,28 @@ void dessiner_legendaire(int ligne, int colonne, int couleur);
 void dessiner_epic(int ligne, int colonne, int couleur);
 void dessiner_basique(int ligne, int colonne, int couleur);
 
+void saisirInformationsJoueurs(S_joueur *joueurs, int nbJoueurs);
+
 
 
 int main() {
 
-    sleep(1);
+    Sleep(1);
     plein_ecran();
-    sleep(1);
+    Sleep(1);
+
+    S_joueur joueurs[NB_JOUEURS];
+
+    saisirInformationsJoueurs(joueurs, NB_JOUEURS);
 
     // Afficher les plateaux des deux joueurs
-    afficherPlateau(3,120);
+    afficherPlateau(3,80);
 
     //dessiner_basique(3,120,1);
 
     //dessiner_epic(3, 120, 10);
 
-    dessiner_legendaire(3, 120, 12);
+    //dessiner_legendaire(3, 120, 12);
 
     positionner_curseur(103,250);
 
@@ -208,11 +228,11 @@ void afficherPlateau(int ligne, int colonne) {
 
     // Ligne de séparation des plateaux
     for(i=0 ; i<((LARGEUR+1)*COLONNES)+1 ; i++) {
-        positionner_curseur(ligne + (HAUTEUR-1)*COLONNES+1,colonne + i);
+        positionner_curseur(ligne + (HAUTEUR-1)*COLONNES+7,colonne + i);
         printf("=");
     }
     for(i=0 ; i<((LARGEUR+1)*COLONNES)+1 ; i++) {
-        positionner_curseur(ligne + (HAUTEUR-1)*COLONNES+2,colonne + i);
+        positionner_curseur(ligne + (HAUTEUR-1)*COLONNES+8,colonne + i);
         printf("=");
     }
 
@@ -290,6 +310,25 @@ void afficherPlateau(int ligne, int colonne) {
 
 
 
+
+void saisirInformationsJoueurs(S_joueur *joueurs, int nbJoueurs) {
+    for (int i = 0; i < nbJoueurs; i++) {
+        printf("========= Saisie des informations du joueur %d =========\n", i + 1);
+        printf("Pseudo: ");
+        scanf("%s", joueurs[i].pseudo);
+        printf("Heros: ");
+        scanf("%s", joueurs[i].heros);
+        printf("Couleurs (3 entiers separes par un espace): ");
+        scanf("%d %d %d", &joueurs[i].couleurs[0], &joueurs[i].couleurs[1], &joueurs[i].couleurs[2]);
+
+        system("CLS");
+    }
+}
+
+
+
+
+
 void positionner_curseur(int ligne, int colonne)
 {
     HANDLE hStdout = GetStdHandle(STD_OUTPUT_HANDLE);//permet de déclarer la variable "hstdout" qui fait référénce à la console
@@ -308,7 +347,7 @@ void plein_ecran()
  keybd_event(VK_RETURN, 0x1c, KEYEVENTF_KEYUP, 0);
  keybd_event(VK_MENU, 0x38, KEYEVENTF_KEYUP, 0);
 
- for (int i = 0; i < 7; i++) {
+ for (int i = 0; i < 4; i++) {
  keybd_event(VK_CONTROL, 0x1d, 0, 0); // Press CTRL key
  keybd_event(0xBD, 0, 0, 0); // Press '-' key (VK_SUBTRACT)
  keybd_event(0xBD, 0, KEYEVENTF_KEYUP, 0); // Release '-' key
